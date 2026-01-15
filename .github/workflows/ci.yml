@@ -1,0 +1,65 @@
+name: CI Pipeline
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+
+    steps:
+    - name: checkout code
+      uses: actions/checkout@v3
+
+    - name: setup node
+      uses: actions/setup-node@v3
+      with:
+        node-version: 18
+
+    - name: install Dependencies
+      run: npm install
+
+    - name: run tests
+      run: npm test
+
+    - name: build docker image
+      run: docker build -t devops-app .
+  
+  notify-on-failure:
+    needs: build
+    if: failure()
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Send Email on CI Failure 
+        uses: dawidd6/action-send-mail@v3
+        with:
+          server-address: smtp.gmail.com
+          server-port: 465
+          secure: true
+          username: ${{secrets.EMAIL_USERNAME}}
+          password: ${{secrets.EMAIL_PASSWORD}}
+          subject: "❌ CI Pipeline Failed"
+          body: |
+            Hello,
+
+            The CI pipeline for the repository has failed. Please check the details below:
+
+            Repository: ${{ github.repository }}
+            Commit: ${{ github.sha }}
+            Workflow: ${{ github.workflow }}
+            Job: ${{ github.job }}
+
+            Please take the necessary actions to resolve the issues.
+
+            Best Regards,
+            DevOps Team
+          to: ankushcoder497001@gmail.com 
+          from:  "DevOps CI <ankushgupta997769@gmail.com>"
+
