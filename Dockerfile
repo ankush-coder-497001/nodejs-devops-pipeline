@@ -2,7 +2,7 @@
 FROM node:18-alpine AS builder
 WORKDIR /app
 
-COPY package.*json ./
+COPY package.json package-lock.json ./
 RUN npm ci
 COPY . .
 RUN npm run build
@@ -13,7 +13,7 @@ WORKDIR /app
 
 RUN addgroup -S appgroup && adduser -S appuser -G appgroup
 
-COPY package.*json ./
+COPY package.json package-lock.json ./
 RUN npm ci --omit=dev
 
 COPY --from=builder --chown=appuser:appgroup /app/build ./build
