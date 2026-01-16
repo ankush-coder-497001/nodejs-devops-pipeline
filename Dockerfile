@@ -1,5 +1,5 @@
 # build stage 1
-FROM node:18-alpine AS builder
+FROM node:18.20-alpine AS builder
 WORKDIR /app
 
 COPY package.json package-lock.json ./
@@ -8,7 +8,7 @@ COPY . .
 RUN npm run build
 
 # build stage 2 (production)
-FROM node:18-alpine
+FROM node:18.20-alpine
 WORKDIR /app
 
 RUN addgroup -S appgroup && adduser -S appuser -G appgroup
