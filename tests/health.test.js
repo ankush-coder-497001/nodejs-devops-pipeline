@@ -1,6 +1,6 @@
 const request = require('supertest');
 const express = require('express');
-const app = require('../app');
+const app = require('../index');
 
 describe('Health Check', () => {
   it('should return status UP', async () => {
