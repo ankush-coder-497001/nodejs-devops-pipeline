@@ -5,7 +5,7 @@
   "scripts": {
     "start": "node index.js",
     "build": "mkdir -p build && cp index.js build/",
-    "test": "echo \"Tests passed\""
+    "test": "jest"
   },
   "license": "MIT",
   "dependencies": {
@@ -13,5 +13,13 @@
     "dotenv": "^17.2.3",
     "express": "^5.2.1",
     "mongoose": "^9.1.3"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.39.2",
+    "eslint": "^9.39.2",
+    "eslint-plugin-react": "^7.37.5",
+    "globals": "^17.0.0",
+    "jest": "^30.2.0",
+    "supertest": "^7.2.2"
   }
 }

@@ -20,5 +20,8 @@ COPY --from=builder --chown=appuser:appgroup /app/build ./build
 
 USER appuser
 EXPOSE 3000
+
+HEALTHCHECK --interval=30s --timeout=30s CMD wget -qO-  http://localhost:3000/health || exit 1
+
 CMD [ "node", "build/index.js" ]
 
