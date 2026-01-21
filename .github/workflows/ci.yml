@@ -52,19 +52,24 @@ jobs:
       run: |
         docker push ${{secrets.DOCKER_USERNAME}}/devops-app:${{github.sha}}
         docker push ${{secrets.DOCKER_USERNAME}}/devops-app:latest 
-     
-    - name: Setup kubectl
-      uses: azure/setup-kubectl@v3
-      with:
-        version: 'latest'
 
-    - name: Deploy to Kubernetes
-      env:
-        KUBE_CONFIG_DATA: ${{secrets.KUBE_CONFIG_DATA}}
+    - name: Validate Kubernetes Manifests (dry run)
       run: |
-       echo "$KUBE_CONFIG_DATA" | base64 --decode > kubeconfig
-       export KUBECONFIG=$PWD/kubeconfig
-       kubectl set image deployment/devops-deployment devops-container=${{secrets.DOCKER_USERNAME}}/devops-app:${{github.sha}} -n devops-ns 
+        kubectl apply --dry-run=client -f k8s/
+     
+    # - name: Setup kubectl
+    #   uses: azure/setup-kubectl@v3
+    #   with:
+    #     version: 'latest'
+
+    # - name: Deploy to Kubernetes
+    #   env:
+    #     KUBE_CONFIG_DATA: ${{secrets.KUBE_CONFIG_DATA}}
+    #   run: |
+    #    echo "$KUBE_CONFIG_DATA" | base64 --decode > kubeconfig
+    #    export KUBECONFIG=$PWD/kubeconfig
+    #    kubectl set image deployment/devops-deployment devops-container=${{secrets.DOCKER_USERNAME}}/devops-app:${{github.sha}} -n devops-ns 
+
 
   notify-on-failure:
     needs: build
